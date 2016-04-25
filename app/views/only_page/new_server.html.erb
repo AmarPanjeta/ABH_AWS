@@ -1,0 +1,12 @@
+<%= form_for :server, url:"#" do |f|%>
+
+<div class="form-group">
+<%= f.label :key_name%><br>
+<%= f.text_field :key_name, class:"form-control"%>
+</div>
+
+<div class="form-group">
+  <%= f.label :image_id, "Kategorija"%><br>
+    <%=f.select(:image_id,@images.collect{|p|[p.name,p.image_id]},{},{}) %>
+</div>
+<%end%>

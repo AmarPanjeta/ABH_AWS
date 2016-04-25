@@ -1,0 +1,30 @@
+// Place all the styles related to the OnlyPage controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+table{
+  background-color: black;
+}
+
+td, th{
+  font-family: "Consolas";
+  color: #00FF00;
+  border-top: none;
+  a{
+    color: inherit;
+  }
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+.col-md-8{
+  padding: 0px;
+}
+
+.table > tbody > tr > td{
+  border: none;
+}

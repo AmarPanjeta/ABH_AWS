@@ -1,0 +1,81 @@
+<div class="col-md-8 col-md-offset-2  window-border">
+  <table class="table borderless">
+    <tr>
+      <th>
+        ID
+      </th>
+      <th>
+        State
+      </th>
+      <th>
+        Key name
+      </th>
+      <th>
+        Options
+      </th>
+    </tr>
+    <% @nesto.each do |s| %>
+      <tr id="<%=s.id%>">
+        <td>
+          <%= s.id %>
+        </td>
+        <td>
+          <%= s.state %>
+        </td>
+        <td class="keyname">
+          <%= s.key_name %>
+        </td>
+        <td>
+          <%= link_to "Stop", only_page_stop_server_path(server_id: s.id),remote:true %> <%= link_to "Start", only_page_start_server_path(server_id: s.id), remote:true %>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td>
+        Action
+      </td>
+      <td>
+
+        <a href="#collapseExample" data-toggle="collapse" >-> Create <-</a>
+      </td>
+      <td>
+
+      </td>
+      <td>
+
+      </td>
+    </tr>
+
+  </table>
+  <div class="collapse" id="collapseExample">
+  <div class="well">
+    <form class="" action="index.html" method="post">
+      
+    </form>
+  </div>
+</div>
+</div>
+
+<script>
+state=false;
+window.setInterval(refresh, 3500);
+
+
+ function refresh(){
+   if(state==false){
+     state=true;
+     $.get("/json_list",function(data) {
+       for(var i=0;i<data.length;i++){
+         child=$("#"+data[i].id).children().eq(1).html();
+         if(child!=data[i].state){
+           $("#"+data[i].id).children().eq(1).html(data[i].state);
+         }
+       }
+     })
+     state=false;
+   }
+   else {
+     return;
+   }
+ }
+</script>
