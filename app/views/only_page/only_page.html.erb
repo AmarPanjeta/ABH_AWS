@@ -1,5 +1,7 @@
 <div class="col-md-8 col-md-offset-2  window-border">
-  <table class="table borderless">
+  <%= image_tag "abh-aws.jpg",class:"img-responsive" %>
+  <h2 class="text-center tbheader" style="font-family: 'Montserrat', sans-serif;">AWS Web GUI</h2>
+  <table id="main" class="table console-border">
     <tr>
       <th>
         ID
@@ -26,7 +28,7 @@
           <%= s.key_name %>
         </td>
         <td>
-          <%= link_to "Stop", only_page_stop_server_path(server_id: s.id),remote:true %> <%= link_to "Start", only_page_start_server_path(server_id: s.id), remote:true %>
+          <%= link_to "Stop", only_page_stop_server_path(server_id: s.id),remote:true %> <%= link_to "Start", only_page_start_server_path(server_id: s.id), remote:true %> <%= link_to "Puppet-install", only_page_install_puppet_path(server_id: s.id) %> <a onclick="openConsole('<%=s.id%>')">Configure</a>
         </td>
       </tr>
     <% end %>
@@ -36,7 +38,7 @@
       </td>
       <td>
 
-        <a href="#collapseExample" data-toggle="collapse" >-> Create <-</a>
+        <a onclick="create()">-> Create <-</a>
       </td>
       <td>
 
@@ -45,12 +47,24 @@
 
       </td>
     </tr>
+    <tr style="display:none">
+      <td>
+        Puppet console
+      </td>
+      <td colspan="3">
+        <textarea id="ta_i-b16d5269" name="name" rows="8" cols="40" onkeyup="scriptsend(this)"></textarea>
+      </td>
+    </tr>
 
   </table>
+  <% if !params[:skript].nil? %>
+    <%= Awservice.radi(params[:skript]) %>
+  <% end %>
   <div class="collapse" id="collapseExample">
   <div class="well">
-    <form class="" action="index.html" method="post">
-      
+    <form class="" action="<%= root_path %>" method="get">
+      <textarea name="skript" rows="8" cols="40"></textarea>
+      <input type="submit" name="name" value="">
     </form>
   </div>
 </div>
@@ -58,12 +72,14 @@
 
 <script>
 state=false;
-window.setInterval(refresh, 3500);
+window.setInterval(refresh, 6000);
 
 
  function refresh(){
    if(state==false){
+     console.log(state);
      state=true;
+     console.log(state);
      $.get("/json_list",function(data) {
        for(var i=0;i<data.length;i++){
          child=$("#"+data[i].id).children().eq(1).html();
@@ -76,6 +92,37 @@ window.setInterval(refresh, 3500);
    }
    else {
      return;
+   }
+ }
+
+ function create(){
+   /*
+   $.get("/only_page/create_server",function(data){
+     append='<tr id="'+data.id+'"><td>'+data.id+'</td><td>'+data.state+'</td><td>'+data.key_name+'</td><td><a data-remote="true" href="/only_page/stop_server?server_id='+data.id+'">Stop</a> <a data-remote="true" href="/only_page/start_server?server_id='+data.id+'">Start</a> <a href="/only_page/install_puppet?server_id='+data.id+'">Puppet-install</a></td></tr>'
+     $('#main tr:nth-last-child(2) ').after(append);
+   })*/
+   append='<tr id="id"><td>id</td><td>state</td><td>key_name</td><td><a data-remote="true" href="/only_page/stop_server?server_id=">Stop</a> <a data-remote="true" href="/only_page/start_server?server_id=">Start</a> <a href="/only_page/install_puppet?server_id=">Puppet-install</a></td></tr>'
+   $('#main tr:nth-last-child(3) ').after(append);
+ }
+
+ function openConsole(server_id){
+   $('#main tr:last-child').show();
+   $('textarea').attr('id',"ta_"+server_id);
+ }
+
+ function scriptsend(ref){
+   if(ref.value.indexOf("puppet go")!=-1){
+     id=ref.id.split('_')[1];
+     what=ref.value.replace("puppet go","");
+     $.post('/only_page/run_puppet_script?server_id='+id+'&what='+encodeURI(what),function(data){
+
+     })
+     ref.value="";
+     alert("imaaa "+ref.id);
+   }
+   else if (ref.value.indexOf("puppet close")!=-1) {
+     ref.value="";
+     $('#main tr:last-child').hide();
    }
  }
 </script>

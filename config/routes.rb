@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'only_page/create_server'
+  get 'only_page/install_puppet'
+  post 'only_page/run_puppet_script'
   get 'only_page/new_server'
   get 'json_list'=>'only_page#json_list'
   get 'only_page/start_server'

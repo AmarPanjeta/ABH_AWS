@@ -19,9 +19,18 @@ class OnlyPageController < ApplicationController
   end
 
   def create_server
-    raise
-    Awservice.create_server(params[:server])
-    redirect_to root_path
+    @server=Awservice.createServer("ami-9dbea4fc")
+    render json: @server
+  end
+
+  def install_puppet
+    Awservice.install_puppet(params[:server_id])
+  end
+
+
+  def run_puppet_script
+    Awservice.puppet_script(params[:server_id],params[:what])
+    render json: 1
   end
 
   def json_list
